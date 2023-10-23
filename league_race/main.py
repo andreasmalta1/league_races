@@ -1,6 +1,7 @@
 import pandas as pd
 
 from leagues import LEAGUES
+from data import get_data
 from video import get_video, freeze_video
 
 
@@ -26,18 +27,19 @@ def get_final_df(df):
 
 
 def leagues_point_race():
-    for lge in LEAGUES:
-        if not LEAGUES[lge].get("start_year"):
-            continue
-
-        year = LEAGUES[lge].get("start_year")
-        lge_name = LEAGUES[lge].get("lge_name")
-        df = get_seasons_df(lge, year)
+    for league in LEAGUES:
+        year = LEAGUES[league].get("start_year")
+        league_name = LEAGUES[league].get("lge_name")
+        df = get_seasons_df(league, year)
         df = get_final_df(df)
 
-        get_video(df, lge_name, lge, year)
-        freeze_video(lge)
+        get_video(df, league_name, league, year)
+        freeze_video(league)
 
     df = get_final_df(pd.read_csv(f"csvs/combined_league_standings.csv"))
     get_video(df, "Combined Top 5 Leagues", "combined", 1995)
     freeze_video("combined")
+
+
+get_data()
+leagues_point_race()
