@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+</html>
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+    <title>League Points Race</title>
+</head>
+<body>
+    <header>
+        <h1>League Points Race</h1>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="{{ url_for('league_race.league_video', league='epl') }}">Premier League</a></li>
+            <li><a href="{{ url_for('league_race.league_video', league='laliga') }}">La Liga</a></li>
+            <li><a href="{{ url_for('league_race.league_video', league='seriea') }}">Serie A</a></li>
+            <li><a href="{{ url_for('league_race.league_video', league='bundesliga') }}">Bundesliga</a></li>
+            <li><a href="{{ url_for('league_race.league_video', league='ligue1') }}">Ligue 1</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <div class="hero">
+        <h2>Welcome to the League Points Race</h2>
+        <p>Join the competition and climb to the top!</p>
+    </div>
+
+    <div class="featured">
+        <h2>Featured Content</h2>
+    </div>
+
+    <footer>
+        &copy; 2023 League Points Race
+    </footer>
+</body>
+</html>
