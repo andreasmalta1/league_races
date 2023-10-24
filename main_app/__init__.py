@@ -7,7 +7,8 @@ load_dotenv()
 app = Flask(__name__)
 app.config["SECRET_KEY"] = getenv("SECRET_KEY")
 
+from main_app.home import home
+from main_app.league_race import league_race
 
-@app.route("/video")
-def serve_video():
-    return render_template("video.html", file_name="epl_clubs_final.mp4")
+app.register_blueprint(home, url_prefix="/")
+app.register_blueprint(league_race, url_prefix="/leagues")
