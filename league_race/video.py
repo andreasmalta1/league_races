@@ -1,19 +1,15 @@
-import bar_chart_race as bcr
-import requests
 import os
-from moviepy.editor import VideoFileClip, ImageClip, TextClip, CompositeVideoClip
-from moviepy.editor import vfx
-
-from leagues import LEAGUES
+from bar_chart_race import bar_chart_race
+from moviepy.editor import VideoFileClip, ImageClip, TextClip, CompositeVideoClip, vfx
 
 
-def get_video(df, competition_name, lge, year):
-    bcr.bar_chart_race(
+def get_video(df, competition_name, league, year):
+    bar_chart_race(
         df=df,
         n_bars=15,
         sort="desc",
         title=f"{competition_name} Clubs Points Since {year}",
-        filename=f"videos/{lge}_race.mp4",
+        filename=os.path.join("videos", f"{league}_race.mp4"),
         filter_column_colors=True,
         period_length=700,
         steps_per_period=30,
@@ -22,37 +18,30 @@ def get_video(df, competition_name, lge, year):
     )
 
 
-def freeze_video(lge):
+def freeze_video(league):
     video = (
-        VideoFileClip(f"videos/{lge}_race.mp4")
+        VideoFileClip(os.path.join("videos", f"{league}_race.mp4"))
         .fx(vfx.freeze, t="end", freeze_duration=1.5)
         .fx(vfx.multiply_speed, 0.5)
     )
 
     footer_one = (
-        TextClip("Stats from fbref.com", font_size=25, color="black")
+        TextClip("Data from fbref.com", font_size=25, color="black")
         .with_position((334, video.h - 50))
         .with_duration(video.duration)
         .with_start(0)
     )
 
-    league_id = LEAGUES[lge].get("fotmob_id")
-    url = "https://images.fotmob.com/image_resources/logo/leaguelogo/"
-    img_data = requests.get(f"{url}{league_id}.png").content
-    with open("logo.png", "wb") as handler:
-        handler.write(img_data)
-
     logo = (
-        ImageClip("logo.png")
+        ImageClip(os.path.join("logos", f"{league}.png"), transparent=True)
         .with_duration(video.duration)
         .resize(height=95)
         .margin(right=8, top=8, opacity=0)
         .with_position(("right", "top"))
-        )
+    )
 
     final = CompositeVideoClip([video, logo, footer_one])
 
-
-    final.write_videofile(f"videos/{lge}_race_full.mp4", codec="libx264")
-    if os.path.exists("logo.png"):
-        os.remove("logo.png")
+    final.write_videofile(
+        os.path.join("videos", f"{league}_race_full.mp4"), codec="libx264"
+    )

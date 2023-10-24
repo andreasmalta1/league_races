@@ -49,7 +49,7 @@ def get_current_season():
 
         league_code = LEAGUES[league]["lge_code"]
         league_name = LEAGUES[league]["lge_name"]
-    
+
         league_url = LEAGUE_URL.format(
             league_code=league_code[1:],
             season_start=CURRENT_SEASON,
