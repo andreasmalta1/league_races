@@ -1,15 +1,21 @@
+import os
+import shutil
 import pandas as pd
 
 from leagues import LEAGUES
-from data import get_data
+from data import get_current_season
 from video import get_video, freeze_video
+from dotenv import load_dotenv
+
+load_dotenv()
+
+CURRENT_SEASON = int(os.getenv("CURRENT_SEASON"))
 
 
 def get_seasons_df(lge, year_start):
     df_all_seasons = pd.DataFrame(columns=["Season", "Squad", "Pts"])
-    for year in range(year_start, 2022):
-        df = pd.read_csv(f"csvs/{lge}/league_standings/{lge}_{year}-{year+1}.csv")
-        df = df[["Squad", "Pts"]]
+    for year in range(year_start, CURRENT_SEASON + 1):
+        df = pd.read_csv(f"csvs/{lge}/{year}-{year+1}.csv")
         df["Season"] = f"{year}/{year+1}"
         df_all_seasons = pd.concat([df_all_seasons, df], ignore_index=True)
 
@@ -36,10 +42,22 @@ def leagues_point_race():
         get_video(df, league_name, league, year)
         freeze_video(league)
 
-    df = get_final_df(pd.read_csv(f"csvs/combined_league_standings.csv"))
-    get_video(df, "Combined Top 5 Leagues", "combined", 1995)
-    freeze_video("combined")
+
+def move_to_static():
+    for league in LEAGUES:
+        source_file = os.path.join("videos", f"{league}_race_full.mp4")
+        dest_file = os.path.join("..", "main_app", "static", "videos", f"{league}_race.mp4")
+        
+        shutil.copy(source_file, dest_file)
+        os.remove(source_file)
+        os.remove(source_file.replace("_full", ""))
 
 
-get_data()
-leagues_point_race()
+def main():
+    get_current_season()
+    leagues_point_race()
+    move_to_static()
+
+
+if __name__ == "__main__":
+    main()
