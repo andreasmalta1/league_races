@@ -1,23 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/index.css') }}"
-    />
-    <title>{{ league }}</title>
-  </head>
-  <body>
-    <h1>{{ league }}</h1>
-    <div class="video-control">
-      <video controls>
-        <source
-          src="{{ url_for('static', filename='videos/')}}{{ file_name }}"
-          type="video/mp4"
-        />
-      </video>
-    </div>
-  </body>
-</html>
+{% extends 'base.html' %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/video.css') }}"/>
+{% endblock %}
+
+{% block title %} {{ league }} {% endblock %}
+
+{% block content %} 
+  <h1>{{ league }}</h1>
+  <div class="video-control">
+    <video controls>
+      <source
+        src="{{ url_for('static', filename='videos/')}}{{ file_name }}"
+        type="video/mp4"
+      />
+    </video>
+  </div>
+{% endblock %}
